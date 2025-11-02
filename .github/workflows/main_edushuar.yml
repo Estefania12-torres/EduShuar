@@ -16,17 +16,19 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18.x' # Compatible con Angular
+      - name: Install Angular CLI
+        run: npm install -g @angular/cli
 
       - name: Install dependencies and build Angular app
         run: |
-          npm ci
+          npm install
           npm run build --if-present
 
       - name: Upload dist folder
         uses: actions/upload-artifact@v4
         with:
           name: angular-dist
-          path: dist/  # Ajusta si tu build genera dist/projectname
+          path: dist/prueba_proyecto
 
   deploy:
     runs-on: ubuntu-latest
@@ -40,10 +42,11 @@ jobs:
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'EduShuar'   # Tu nombre de app en Azure
+          app-name: 'edushuar'   # Tu nombre de app en Azure
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_EDUSHUAR }}
           package: .
 
           
+
 
