@@ -15,7 +15,8 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '22.x' # Compatible con Angular
+          node-version: '22.x' # Compatible con Angular 20+
+
       - name: Install Angular CLI
         run: npm install -g @angular/cli
 
@@ -28,26 +29,40 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: angular-dist
-          path: dist/prueba_proyecto
+          path: dist/prueba_proyecto/
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
+    permissions:
+      id-token: write # Required for requesting the JWT
+      contents: read  # Required for actions/checkout
+
     steps:
-      - name: Download build artifact
+      - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: angular-dist
 
-      - name: 'Deploy to Azure Web App'
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_EE5769DEAC8042F690B657E3628AE449 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_D20AC662E49A4B55B9DD3D87B3B611C6 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_727B2502D53E4720AA11A1EED09E4C75 }}
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'edushuar'   # Tu nombre de app en Azure
+          app-name: 'edushuar'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_EDUSHUAR }}
           package: .
 
+  
+
           
+
 
 
 
