@@ -15,7 +15,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18.x' # Compatible con Angular
+          node-version: '22.x' # Compatible con Angular
       - name: Install Angular CLI
         run: npm install -g @angular/cli
 
@@ -48,5 +48,6 @@ jobs:
           package: .
 
           
+
 
 
